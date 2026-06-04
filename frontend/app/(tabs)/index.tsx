@@ -13,6 +13,7 @@ import {
   StyleSheet,
   ScrollView,
   SafeAreaView,
+  Platform,
 } from 'react-native';
 
 WebBrowser.maybeCompleteAuthSession();
@@ -78,7 +79,7 @@ export default function LoginScreen() {
                 <Text style={styles.prefix}>+45</Text>
               </View>
               <TextInput
-                style={styles.phoneInput}
+                style={[styles.phoneInput, Platform.OS === 'web' && styles.phoneInputWeb]}
                 value={phoneNumber}
                 onChangeText={setPhoneNumber}
                 placeholder="12 34 56 78"
@@ -148,7 +149,22 @@ const styles = StyleSheet.create({
   countryCode: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 16, paddingVertical: 12, backgroundColor: '#F9FAFB', borderRadius: 8, borderWidth: 2, borderColor: '#E5E7EB' },
   flag: { fontSize: 16 },
   prefix: { fontSize: 16, fontWeight: '500', color: '#111827' },
-  phoneInput: { flex: 1, paddingHorizontal: 16, paddingVertical: 12, backgroundColor: '#F9FAFB', borderRadius: 8, borderWidth: 2, borderColor: '#E5E7EB', fontSize: 16, color: '#111827' },
+  phoneInput: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#F9FAFB',
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#E5E7EB',
+    fontSize: 16,
+    color: '#111827',
+  },
+  phoneInputWeb: {
+    // @ts-ignore
+    outlineStyle: 'none',
+    outlineWidth: 0,
+  },
   continueButton: { width: '100%', paddingVertical: 16, backgroundColor: '#c8102e', borderRadius: 8, alignItems: 'center', marginBottom: 20 },
   continueButtonDisabled: { backgroundColor: '#E5E7EB' },
   continueButtonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '600' },
@@ -159,7 +175,7 @@ const styles = StyleSheet.create({
   socialButtons: { gap: 12, marginBottom: 32 },
   googleButton: { width: '100%', paddingVertical: 14, backgroundColor: '#FFFFFF', borderRadius: 8, borderWidth: 2, borderColor: '#E5E7EB', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
   googleIcon: { fontSize: 20, fontWeight: 'bold' },
-  googleButtonText: { color: '#111827', fontSize: 15, funWeight: '500' },
+  googleButtonText: { color: '#111827', fontSize: 15, fontWeight: '500' },
   termsText: { fontSize: 12, color: '#6B7280', textAlign: 'center', lineHeight: 18, marginBottom: 24 },
   termsLink: { color: '#c8102e', textDecorationLine: 'underline' },
 });

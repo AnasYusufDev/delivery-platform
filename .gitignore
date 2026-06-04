@@ -24,3 +24,5 @@ build/
 *.class
 *.jar
 target/
+.vercel
+.env*.local

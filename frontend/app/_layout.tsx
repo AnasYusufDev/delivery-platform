@@ -1,13 +1,16 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useEffect, useState, useRef } from 'react';
-import { Text, StyleSheet, Animated } from 'react-native';
+import { Text, StyleSheet, Animated, Platform } from 'react-native';
+
+if (Platform.OS !== 'web') {
+  require('react-native-reanimated');
+}
 
 export const unstable_settings = {
-  anchor: '(tabs)',
+  anchor: '(tabs)/index',
 };
 
 function SplashScreen({ onDone }: { onDone: () => void }) {
@@ -21,19 +24,19 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
         toValue: 1,
         tension: 10,
         friction: 3,
-        useNativeDriver: true,
+        useNativeDriver: Platform.OS !== 'web',
       }),
       Animated.timing(opacityAnim, {
         toValue: 1,
         duration: 500,
-        useNativeDriver: true,
+        useNativeDriver: Platform.OS !== 'web',
       }),
     ]).start(() => {
       setTimeout(() => {
         Animated.timing(slideAnim, {
           toValue: 900,
           duration: 600,
-          useNativeDriver: true,
+          useNativeDriver: Platform.OS !== 'web',
         }).start(() => onDone());
       }, 1000);
     });
