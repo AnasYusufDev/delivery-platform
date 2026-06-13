@@ -5,11 +5,11 @@ A food delivery app built from scratch — users can browse nearby restaurants a
 
 | Login | Restauranter | Menu |
 |-------|-------------|------|
-| <img src="screenshots/login.png" width="200"> | <img src="screenshots/restaurants.png" width="200"> | <img src="screenshots/menu.png" width="200"> |
+| <img src="screenshots/login.png.jpg" width="200"> | <img src="screenshots/restaurants.png.jpg" width="200"> | <img src="screenshots/menu.png.jpg" width="200"> |
 
 | Kurv | Orderconfirmation | Profil |
 |------|------------------|--------|
-| <img src="screenshots/cart.png" width="200"> | <img src="screenshots/order.png" width="200"> | <img src="screenshots/profile.png" width="200"> |
+| <img src="screenshots/cart.png.jpg" width="200"> | <img src="screenshots/order.png.jpg" width="200"> | <img src="screenshots/profile.png.jpg" width="200"> |
 
 ## 🎥 Demo Video
 *(Coming soon)*
