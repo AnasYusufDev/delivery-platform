@@ -31,11 +31,11 @@ A food delivery app built from scratch — users can browse nearby restaurants a
 ---
 
 ## 🛠 Stack
-**Frontend** — React Native (Expo) + TypeScript
-**Backend** — Spring Boot (Java) REST API
-**Database** — MySQL
+**Frontend** — React Native (Expo) + TypeScript  
+**Backend** — Spring Boot (Java) REST API  
+**Database** — MySQL  
 **Auth** — Google OAuth + JWT
 
 ---
 
-## 📁 Project Structure
+Built by [Anas Yusuf](https://github.com/AnasYusufDev)
