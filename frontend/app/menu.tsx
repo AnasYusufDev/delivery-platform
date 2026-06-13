@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   SafeAreaView,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 
@@ -16,6 +17,7 @@ type MenuItem = {
   description: string;
   price: number;
   category: string;
+  imageUrl: string;
 };
 
 type CartItem = {
@@ -59,20 +61,33 @@ export default function MenuScreen() {
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   if (loading) {
-    return <ActivityIndicator style={{ flex: 1 }} size="large" color="#c8102e" />;
+    return <ActivityIndicator style={{ flex: 1 }} size="large" color="#15803d" />;
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Text style={styles.backText}>← Tilbage</Text>
-      </TouchableOpacity>
-      <Text style={styles.title}>{restaurantName}</Text>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()}>
+          <Text style={styles.backText}>← Tilbage</Text>
+        </TouchableOpacity>
+        <Text style={styles.title}>{restaurantName}</Text>
+      </View>
+
       <FlatList
         data={menuItems}
         keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={{ padding: 16, paddingBottom: 100 }}
+        showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
           <View style={styles.card}>
+            {item.imageUrl ? (
+              <Image source={{ uri: item.imageUrl }} style={styles.image} />
+            ) : (
+              <View style={styles.imagePlaceholder}>
+                <Text style={styles.imagePlaceholderText}>🍽️</Text>
+              </View>
+            )}
             <View style={styles.cardContent}>
               <Text style={styles.name}>{item.name}</Text>
               <Text style={styles.description}>{item.description}</Text>
@@ -87,12 +102,13 @@ export default function MenuScreen() {
           </View>
         )}
       />
+
       {cartCount > 0 && (
         <TouchableOpacity
           style={styles.cartButton}
           onPress={() => router.push({ pathname: '/cart', params: { cartItems: JSON.stringify(cart), restaurantId: restaurantId } })}
         >
-          <Text style={styles.cartButtonText}>Se kurv ({cartCount})</Text>
+          <Text style={styles.cartButtonText}>🛒 Se kurv ({cartCount})</Text>
         </TouchableOpacity>
       )}
     </SafeAreaView>
@@ -100,19 +116,22 @@ export default function MenuScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff', padding: 16 },
-  backButton: { marginBottom: 12 },
-  backText: { fontSize: 16, color: '#c8102e', fontWeight: '500' },
-  title: { fontSize: 28, fontWeight: 'bold', color: '#111827', marginBottom: 16 },
-  card: { backgroundColor: '#F9FAFB', borderRadius: 12, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: '#E5E7EB', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  container: { flex: 1, backgroundColor: '#F0FDF4' },
+  header: { backgroundColor: '#15803d', paddingHorizontal: 20, paddingTop: 16, paddingBottom: 24, borderBottomLeftRadius: 24, borderBottomRightRadius: 24 },
+  backText: { fontSize: 16, color: '#bbf7d0', fontWeight: '500', marginBottom: 8 },
+  title: { fontSize: 28, fontWeight: 'bold', color: '#ffffff' },
+  card: { backgroundColor: '#fff', borderRadius: 16, padding: 12, marginBottom: 12, flexDirection: 'row', alignItems: 'center', gap: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 6, elevation: 2 },
+  image: { width: 75, height: 75, borderRadius: 12 },
+  imagePlaceholder: { width: 75, height: 75, borderRadius: 12, backgroundColor: '#F3F4F6', alignItems: 'center', justifyContent: 'center' },
+  imagePlaceholderText: { fontSize: 28 },
   cardContent: { flex: 1 },
   name: { fontSize: 16, fontWeight: '600', color: '#111827', marginBottom: 4 },
   description: { fontSize: 13, color: '#6B7280', marginBottom: 4 },
-  category: { fontSize: 12, color: '#9CA3AF' },
+  category: { fontSize: 12, color: '#15803d', fontWeight: '500' },
   right: { alignItems: 'center', gap: 8 },
-  price: { fontSize: 16, fontWeight: 'bold', color: '#c8102e' },
-  addButton: { backgroundColor: '#c8102e', borderRadius: 20, width: 32, height: 32, alignItems: 'center', justifyContent: 'center' },
+  price: { fontSize: 16, fontWeight: 'bold', color: '#15803d' },
+  addButton: { backgroundColor: '#15803d', borderRadius: 20, width: 34, height: 34, alignItems: 'center', justifyContent: 'center' },
   addButtonText: { color: '#fff', fontSize: 20, fontWeight: 'bold' },
-  cartButton: { backgroundColor: '#c8102e', borderRadius: 8, padding: 16, alignItems: 'center', marginTop: 8 },
-  cartButtonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
+  cartButton: { position: 'absolute', bottom: 24, left: 20, right: 20, backgroundColor: '#15803d', borderRadius: 16, padding: 18, alignItems: 'center', shadowColor: '#15803d', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 6 },
+  cartButtonText: { color: '#fff', fontSize: 16, fontWeight: '700' },
 });

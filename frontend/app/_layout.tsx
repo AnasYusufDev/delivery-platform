@@ -10,7 +10,7 @@ if (Platform.OS !== 'web') {
 }
 
 export const unstable_settings = {
-  anchor: '(tabs)/index',
+  anchor: 'login',
 };
 
 function SplashScreen({ onDone }: { onDone: () => void }) {
@@ -46,7 +46,7 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
     <Animated.View style={[styles.splash, { transform: [{ translateY: slideAnim }] }]}>
       <Animated.View style={{ transform: [{ scale: scaleAnim }], opacity: opacityAnim }}>
         <Text style={styles.logoText}>
-          <Text style={styles.logoRed}>All</Text>
+          <Text style={styles.logoGreen}>All</Text>
           <Text style={styles.logoWhite}> Eats</Text>
         </Text>
         <Text style={styles.tagline}>Mad leveret med hjerte 🇩🇰</Text>
@@ -61,7 +61,8 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
+      <Stack initialRouteName="login">
+        <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="next" options={{ headerShown: false }} />
         <Stack.Screen name="menu" options={{ headerShown: false }} />
@@ -78,7 +79,7 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   splash: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#c8102e',
+    backgroundColor: '#15803d',
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 999,
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  logoRed: {
+  logoGreen: {
     color: '#ffffff',
   },
   logoWhite: {

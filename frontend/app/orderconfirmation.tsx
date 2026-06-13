@@ -50,15 +50,15 @@ export default function OrderConfirmationScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  container: { flex: 1, backgroundColor: '#F0FDF4' },
   content: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
   emoji: { fontSize: 80, marginBottom: 24 },
   title: { fontSize: 32, fontWeight: 'bold', color: '#111827', marginBottom: 12, textAlign: 'center' },
   subtitle: { fontSize: 16, color: '#6B7280', textAlign: 'center', marginBottom: 32 },
-  card: { backgroundColor: '#FEF2F2', borderRadius: 12, padding: 24, width: '100%', alignItems: 'center', marginBottom: 24, borderWidth: 1, borderColor: '#FECACA' },
+  card: { backgroundColor: '#DCFCE7', borderRadius: 16, padding: 24, width: '100%', alignItems: 'center', marginBottom: 24, borderWidth: 1, borderColor: '#86efac' },
   cardLabel: { fontSize: 14, color: '#6B7280', marginBottom: 8 },
-  cardPrice: { fontSize: 36, fontWeight: 'bold', color: '#c8102e' },
+  cardPrice: { fontSize: 36, fontWeight: 'bold', color: '#15803d' },
   info: { fontSize: 14, color: '#6B7280', marginBottom: 40 },
-  button: { backgroundColor: '#c8102e', borderRadius: 8, padding: 16, width: '100%', alignItems: 'center' },
-  buttonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
+  button: { backgroundColor: '#15803d', borderRadius: 16, padding: 18, width: '100%', alignItems: 'center', shadowColor: '#15803d', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 6 },
+  buttonText: { color: '#fff', fontSize: 16, fontWeight: '700' },
 });
