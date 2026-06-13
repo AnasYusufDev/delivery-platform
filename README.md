@@ -19,13 +19,13 @@ A food delivery app built from scratch — users can browse nearby restaurants a
 ---
 
 ## ✨ Features
-- ✅ Google login + telefonnummer login
-- ✅ Splash screen med animation
-- ✅ Restaurantliste med søgning
-- ✅ Menubrowsing med billeder
-- ✅ Kurv funktionalitet
-- ✅ Ordrebekræftelse
-- ✅ Brugerprofil
+- ✅ Google login + phone number login
+- ✅ Splash screen with animation
+- ✅ Restaurant list with search
+- ✅ Menu browsing with images
+- ✅ Cart functionality
+- ✅ Order confirmation
+- ✅ User profile
 
 ---
 
