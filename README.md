@@ -14,8 +14,7 @@ A food delivery app built from scratch — users can browse nearby restaurants a
 ## 🎥 Demo Video
 [▶️ Se demo video](https://youtube.com/shorts/c4fS06Ffne0?feature=share)
 
-## 🔗 Live Demo
-[Visit AllEats](https://delivery-platform-cyan.vercel.app)
+
 
 ---
 
