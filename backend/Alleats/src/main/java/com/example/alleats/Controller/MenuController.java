@@ -26,4 +26,10 @@ public class MenuController {
     public ResponseEntity<MenuItem> createMenuItem(@RequestBody MenuItem menuItem) {
         return ResponseEntity.ok(menuservice.createMenuItem(menuItem));
     }
+
+    // PUT /api/menu/{id} - opdater menu item
+    @PutMapping("/{id}")
+    public ResponseEntity<MenuItem> updateMenuItem(@PathVariable Long id, @RequestBody MenuItem menuItem) {
+        return ResponseEntity.ok(menuservice.updateMenuItem(id, menuItem));
+    }
 }
