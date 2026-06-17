@@ -12,22 +12,22 @@ public class MenuItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Navn på retten
+    // Name of the dish
     private String name;
 
-    // Beskrivelse af retten
+    // Description of the dish
     private String description;
 
-    // Pris i kroner
+    // Price in DKK
     private Double price;
 
-    // Billede URL
+    // Image URL
     private String imageUrl;
 
-    // Kategori (fx Burger, Drink, Dessert)
+    // Category (e.g. Burger, Drink, Dessert)
     private String category;
 
-    // Hvilken restaurant retten tilhører
+    // The restaurant this item belongs to
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;

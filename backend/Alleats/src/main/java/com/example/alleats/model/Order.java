@@ -3,7 +3,6 @@ package com.example.alleats.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Entity
@@ -14,17 +13,17 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Hvornår ordren blev lavet
+    // Timestamp when the order was placed
     private LocalDateTime createdAt;
 
-    // Total pris
+    // Total price in DKK
     private Double totalPrice;
 
-    // Status på ordren
+    // Current status of the order
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    // Hvilken restaurant
+    // The restaurant this order belongs to
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;

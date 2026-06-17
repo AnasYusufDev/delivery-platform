@@ -1,57 +1,50 @@
 package com.example.alleats.model;
 
-
 import jakarta.persistence.*;
 import lombok.Data;
 
-// @Data = Lombok laver automatisk getters og setters
 @Data
-
-// @Entity = Denne klasse er en databasetabel i MySQL
 @Entity
-
-// @Table = Tabellen hedder "users" i databasen
 @Table(name = "users")
 public class User {
 
-    // Unikt ID som gives automatisk (1, 2, 3...)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Brugerens fulde navn
+    // Full name of the user
     private String name;
 
-    // Email skal være unik
+    // Email must be unique
     @Column(unique = true)
     private String email;
 
-    // Password - kun brugt ved email/password login
-    // Er null hvis brugeren logger ind med Google
+    // Password - only used for email/password login
+    // Null if user logs in with Google
     private String password;
 
-    // Google bruger ID - kun brugt ved Google login
-    // Er null hvis brugeren logger ind med email/password
+    // Google user ID - only used for Google login
+    // Null if user logs in with email/password
     private String googleId;
 
-    // Hvilken login metode brugeren bruger
+    // Login method used by the user
     @Enumerated(EnumType.STRING)
     private LoginType loginType;
 
-    // Rolle i appen
+    // User role in the app
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    // De 2 login metoder
+    // Available login methods
     public enum LoginType {
-        EMAIL,   // Logger ind med email og password
-        GOOGLE   // Logger ind med Google konto
+        EMAIL,   // Login with email and password
+        GOOGLE   // Login with Google account
     }
 
-    // De 3 mulige roller
+    // Available user roles
     public enum Role {
-        KUNDE,       // Bestiller mad
-        RESTAURANT,  // Modtager og laver mad
-        BUD          // Leverer maden
+        KUNDE,       // Orders food
+        RESTAURANT,  // Receives and prepares food
+        BUD          // Delivers food
     }
 }

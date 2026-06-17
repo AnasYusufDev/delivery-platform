@@ -8,27 +8,26 @@ import org.springframework.stereotype.Service;
 import java.security.Key;
 import java.util.Date;
 
-// @Service = Denne fil håndterer JWT tokens
 @Service
 public class JwtService {
 
-    // Hemmelig nøgle til at signere tokens - skal holdes hemmelig!
+    // Secret key for signing tokens - must be kept private!
     private final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    // Token holder i 24 timer
-    private final long EXPIRATION = 86400000;
+    // Token expires after 24 hours
+    private static final long TOKEN_EXPIRATION_MS = 86400000;
 
-    // Lav en ny token til en bruger
+    // Generate a new token for a user
     public String generateToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
+                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_MS))
                 .signWith(secretKey)
                 .compact();
     }
 
-    // Hent email ud fra en token
+    // Extract email from token
     public String getEmailFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(secretKey)
@@ -38,7 +37,7 @@ public class JwtService {
                 .getSubject();
     }
 
-    // Tjek om en token er gyldig
+    // Validate token
     public boolean isTokenValid(String token) {
         try {
             getEmailFromToken(token);

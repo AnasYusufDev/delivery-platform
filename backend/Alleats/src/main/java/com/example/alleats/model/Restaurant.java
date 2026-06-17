@@ -12,21 +12,21 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Restaurantens navn
+    // Restaurant name
     private String name;
 
-    // Beskrivelse af restauranten
+    // Short description of the restaurant
     private String description;
 
-    // Adresse
+    // Street address
     private String address;
 
-    // Billede URL
+    // Image URL
     private String imageUrl;
 
-    // Er restauranten åben?
+    // Whether the restaurant is currently open
     private boolean open;
 
-    // Hvilken madkategori (fx Pizza, Burger, Sushi)
+    // Food category (e.g. Pizza, Burger, Sushi)
     private String category;
 }

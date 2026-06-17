@@ -15,11 +15,13 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    // POST /api/orders - create a new order
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody Order order) {
         return ResponseEntity.ok(orderService.createOrder(order));
     }
 
+    // GET /api/orders - get all orders
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());

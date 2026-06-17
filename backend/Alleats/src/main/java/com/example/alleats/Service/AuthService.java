@@ -1,63 +1,53 @@
 package com.example.alleats.Service;
 
-import org.springframework.stereotype.Service;
-
-
 import com.example.alleats.model.User;
 import com.example.alleats.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-// @Service = Denne fil håndterer al login og registrering logik
 @Service
-
-// @RequiredArgsConstructor = Lombok laver automatisk constructor
 @RequiredArgsConstructor
 public class AuthService {
 
-    // Bruges til at gemme og hente brugere fra databasen
     private final UserRepository userRepository;
-
-    // Bruges til at kryptere passwords
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
-    // Registrer en ny bruger med email og password
+    // Register a new user with email and password
     public User registerWithEmail(String name, String email, String password) {
 
-        // Tjek om email allerede er i brug
+        // Check if email is already in use
         if (userRepository.existsByEmail(email)) {
-            throw new RuntimeException("Email er allerede i brug");
+            throw new RuntimeException("Email is already in use");
         }
 
-        // Lav en ny bruger
+        // Create new user
         User user = new User();
         user.setName(name);
         user.setEmail(email);
 
-        // Krypter password før det gemmes i databasen
+        // Encrypt password before saving to database
         user.setPassword(passwordEncoder.encode(password));
         user.setRole(User.Role.KUNDE);
         user.setLoginType(User.LoginType.EMAIL);
 
-        // Gem brugeren i databasen
+        // Save user to database
         return userRepository.save(user);
     }
 
-    // Login med email og password
+    // Login with email and password
     public User loginWithEmail(String email, String password) {
 
-        // Find brugeren via email
+        // Find user by email
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Bruger ikke fundet"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Tjek om password er korrekt
+        // Verify password
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("Forkert password");
+            throw new RuntimeException("Incorrect password");
         }
 
         return user;
     }
-
-    private final JwtService jwtService;
 }

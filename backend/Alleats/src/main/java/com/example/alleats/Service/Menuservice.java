@@ -9,28 +9,31 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class Menuservice {
+public class MenuService {
 
     private final MenuItemRepository menuItemRepository;
 
-    // Hent alle menu items for en restaurant
+    // Get all menu items for a restaurant
     public List<MenuItem> getMenuByRestaurantId(Long restaurantId) {
         return menuItemRepository.findByRestaurantId(restaurantId);
     }
 
-    // Opret nyt menu item
+    // Create new menu item
     public MenuItem createMenuItem(MenuItem menuItem) {
         return menuItemRepository.save(menuItem);
     }
 
-    // Opdater menu item
+    // Update existing menu item
     public MenuItem updateMenuItem(Long id, MenuItem updatedItem) {
-        MenuItem existing = menuItemRepository.findById(id).orElseThrow();
+        MenuItem existing = menuItemRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Menu item not found with id: " + id));
+
         existing.setName(updatedItem.getName());
         existing.setDescription(updatedItem.getDescription());
         existing.setPrice(updatedItem.getPrice());
         existing.setCategory(updatedItem.getCategory());
         existing.setImageUrl(updatedItem.getImageUrl());
+
         return menuItemRepository.save(existing);
     }
 }
