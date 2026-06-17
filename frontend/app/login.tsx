@@ -16,12 +16,16 @@ import {
 
 WebBrowser.maybeCompleteAuthSession();
 
+// Constants
+const RESTAURANTS_ROUTE = '/(tabs)/restaurants' as const;
+const MIN_PHONE_LENGTH = 8;
+
 export default function LoginScreen() {
   const [phoneNumber, setPhoneNumber] = useState('');
 
   const redirectUri = AuthSession.makeRedirectUri({ useProxy: true });
 
-  const [request, response, promptAsync] = Google.useAuthRequest({
+  const [, response, promptAsync] = Google.useAuthRequest({
     iosClientId: '811079976207-38tkf94k0cl010r7onjqu01unguhn8mg.apps.googleusercontent.com',
     webClientId: '811079976207-8ovpih9jv8fal5v3olonp95nuje3hf5s.apps.googleusercontent.com',
     redirectUri,
@@ -29,9 +33,19 @@ export default function LoginScreen() {
 
   useEffect(() => {
     if (response?.type === 'success') {
-      router.push("/(tabs)/restaurants");
+      router.push(RESTAURANTS_ROUTE);
     }
   }, [response]);
+
+  const isPhoneValid = phoneNumber.length >= MIN_PHONE_LENGTH;
+
+  const handleContinue = () => {
+    router.push(RESTAURANTS_ROUTE);
+  };
+
+  const handleGoogleLogin = () => {
+    promptAsync({ useProxy: true });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -45,6 +59,7 @@ export default function LoginScreen() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
+          {/* Logo */}
           <View style={styles.header}>
             <Text style={styles.logo}>
               <Text style={styles.logoGreen}>All</Text>
@@ -53,6 +68,7 @@ export default function LoginScreen() {
             <Text style={styles.tagline}>Mad leveret med hjerte 🇩🇰</Text>
           </View>
 
+          {/* Impact message */}
           <View style={styles.impactContainer}>
             <Text style={styles.impactEmoji}>🌱</Text>
             <Text style={styles.impactText}>
@@ -61,6 +77,7 @@ export default function LoginScreen() {
             </Text>
           </View>
 
+          {/* Phone input */}
           <View style={styles.inputSection}>
             <Text style={styles.label}>Telefonnummer</Text>
             <View style={styles.phoneInputContainer}>
@@ -80,27 +97,29 @@ export default function LoginScreen() {
             </View>
           </View>
 
+          {/* Continue button */}
           <TouchableOpacity
-            style={[styles.continueButton, phoneNumber.length < 8 && styles.continueButtonDisabled]}
-            disabled={phoneNumber.length < 8}
-            onPress={() => router.push('/(tabs)/restaurants')}
+            style={[styles.continueButton, !isPhoneValid && styles.continueButtonDisabled]}
+            disabled={!isPhoneValid}
+            onPress={handleContinue}
           >
-            <Text style={styles.continueButtonText}>
-              Fortsæt
-            </Text>
+            <Text style={styles.continueButtonText}>Fortsæt</Text>
           </TouchableOpacity>
 
+          {/* Divider */}
           <View style={styles.divider}>
             <View style={styles.dividerLine} />
             <Text style={styles.dividerText}>eller</Text>
             <View style={styles.dividerLine} />
           </View>
 
-          <TouchableOpacity style={styles.googleButton} onPress={() => promptAsync({ useProxy: true })}>
+          {/* Google login */}
+          <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin}>
             <Text style={styles.googleIcon}>G</Text>
             <Text style={styles.googleButtonText}>Fortsæt med Google</Text>
           </TouchableOpacity>
 
+          {/* Terms */}
           <Text style={styles.termsText}>
             Ved at fortsætte accepterer du vores{' '}
             <Text style={styles.termsLink}>Betingelser</Text>

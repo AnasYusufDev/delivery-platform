@@ -9,50 +9,77 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 
+// Note: User data is currently hardcoded for demo purposes
+const MOCK_USER = {
+  name: 'Anas Yusuf',
+  email: 'anas@email.com',
+  phone: '+45 12 34 56 78',
+  initials: 'A',
+};
+
+const MOCK_ORDERS = [
+  {
+    id: '1',
+    itemName: 'Classic Burger',
+    restaurant: 'Burger House',
+    price: '89 kr',
+    status: '✅ Leveret',
+  },
+];
+
 export default function ProfileScreen() {
+
+  const handleLogout = () => {
+    router.replace('/login');
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
+
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.avatar}>
-            <Text style={styles.avatarText}>A</Text>
+            <Text style={styles.avatarText}>{MOCK_USER.initials}</Text>
           </View>
-          <Text style={styles.name}>Anas</Text>
-          <Text style={styles.email}>anas@email.com</Text>
+          <Text style={styles.name}>{MOCK_USER.name}</Text>
+          <Text style={styles.email}>{MOCK_USER.email}</Text>
         </View>
 
-        {/* Mine oplysninger */}
+        {/* User info */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Mine oplysninger</Text>
           <View style={styles.card}>
             <Text style={styles.label}>Navn</Text>
-            <Text style={styles.value}>Anas Yusuf</Text>
+            <Text style={styles.value}>{MOCK_USER.name}</Text>
           </View>
           <View style={styles.card}>
             <Text style={styles.label}>Email</Text>
-            <Text style={styles.value}>anas@email.com</Text>
+            <Text style={styles.value}>{MOCK_USER.email}</Text>
           </View>
           <View style={styles.card}>
             <Text style={styles.label}>Telefon</Text>
-            <Text style={styles.value}>+45 12 34 56 78</Text>
+            <Text style={styles.value}>{MOCK_USER.phone}</Text>
           </View>
         </View>
 
-        {/* Ordrehistorik */}
+        {/* Order history */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Seneste ordrer</Text>
-          <View style={styles.card}>
-            <Text style={styles.orderName}>Classic Burger</Text>
-            <Text style={styles.orderDetails}>Burger House • 89 kr</Text>
-            <Text style={styles.orderStatus}>✅ Leveret</Text>
-          </View>
+          {MOCK_ORDERS.map(order => (
+            <View key={order.id} style={styles.card}>
+              <Text style={styles.orderName}>{order.itemName}</Text>
+              <Text style={styles.orderDetails}>{order.restaurant} • {order.price}</Text>
+              <Text style={styles.orderStatus}>{order.status}</Text>
+            </View>
+          ))}
         </View>
 
-        {/* Log ud */}
-        <TouchableOpacity style={styles.logoutButton}>
+        {/* Logout */}
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Text style={styles.logoutText}>Log ud</Text>
         </TouchableOpacity>
+
       </ScrollView>
     </SafeAreaView>
   );

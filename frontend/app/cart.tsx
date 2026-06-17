@@ -11,6 +11,13 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 
+// Constants
+const API_BASE_URL = 'https://unclasp-deceiving-skimming.ngrok-free.dev';
+const API_HEADERS = {
+  'Content-Type': 'application/json',
+  'ngrok-skip-browser-warning': 'true',
+};
+
 type CartItem = {
   id: number;
   name: string;
@@ -28,28 +35,28 @@ export default function CartScreen() {
   const placeOrder = async () => {
     setLoading(true);
     try {
-      const response = await fetch('https://unclasp-deceiving-skimming.ngrok-free.dev/api/orders', {
+      const response = await fetch(`${API_BASE_URL}/api/orders`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': 'true'
-        },
+        headers: API_HEADERS,
         body: JSON.stringify({
           totalPrice: total,
-          restaurant: { id: restaurantId }
-        })
+          restaurant: { id: restaurantId },
+        }),
       });
 
       if (response.ok) {
         router.replace({
           pathname: '/orderconfirmation',
-          params: { total: total, restaurantName: restaurantId }
+          params: { total, restaurantId },
         });
+      } else {
+        Alert.alert('Fejl', 'Bestilling mislykkedes. Prøv igen.');
       }
     } catch (err) {
-      Alert.alert('Fejl', 'Noget gik galt. Prøv igen.');
+      Alert.alert('Fejl', 'Noget gik galt. Tjek din forbindelse og prøv igen.');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -62,6 +69,7 @@ export default function CartScreen() {
         <Text style={styles.title}>Din kurv 🛒</Text>
       </View>
 
+      {/* Empty state */}
       {items.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyIcon}>🛒</Text>
@@ -70,6 +78,7 @@ export default function CartScreen() {
         </View>
       ) : (
         <>
+          {/* Cart items */}
           <FlatList
             data={items}
             keyExtractor={(item) => item.id.toString()}
@@ -85,12 +94,18 @@ export default function CartScreen() {
               </View>
             )}
           />
+
+          {/* Order summary */}
           <View style={styles.totalContainer}>
             <View style={styles.totalRow}>
               <Text style={styles.totalLabel}>Total</Text>
               <Text style={styles.totalText}>{total} kr</Text>
             </View>
-            <TouchableOpacity style={styles.orderButton} onPress={placeOrder} disabled={loading}>
+            <TouchableOpacity
+              style={styles.orderButton}
+              onPress={placeOrder}
+              disabled={loading}
+            >
               {loading ? (
                 <ActivityIndicator color="#fff" />
               ) : (

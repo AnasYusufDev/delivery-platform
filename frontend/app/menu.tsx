@@ -11,6 +11,10 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 
+// Constants
+const API_BASE_URL = 'https://unclasp-deceiving-skimming.ngrok-free.dev';
+const API_HEADERS = { 'ngrok-skip-browser-warning': 'true' };
+
 type MenuItem = {
   id: number;
   name: string;
@@ -31,30 +35,46 @@ export default function MenuScreen() {
   const { restaurantId, restaurantName } = useLocalSearchParams();
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [cart, setCart] = useState<CartItem[]>([]);
 
   useEffect(() => {
-    fetch(`https://unclasp-deceiving-skimming.ngrok-free.dev/api/menu/${restaurantId}`, {
-      headers: { 'ngrok-skip-browser-warning': 'true' }
-    })
-      .then(res => res.json())
-      .then(data => {
-        setMenuItems(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error(err);
-        setLoading(false);
-      });
+    fetchMenu();
   }, []);
+
+  const fetchMenu = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/menu/${restaurantId}`, {
+        headers: API_HEADERS,
+      });
+      const data = await response.json();
+      setMenuItems(data);
+    } catch (err) {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const addToCart = (item: MenuItem) => {
     setCart(prev => {
       const existing = prev.find(c => c.id === item.id);
       if (existing) {
-        return prev.map(c => c.id === item.id ? { ...c, quantity: c.quantity + 1 } : c);
+        return prev.map(c =>
+          c.id === item.id ? { ...c, quantity: c.quantity + 1 } : c
+        );
       }
       return [...prev, { id: item.id, name: item.name, price: item.price, quantity: 1 }];
+    });
+  };
+
+  const handleViewCart = () => {
+    router.push({
+      pathname: '/cart',
+      params: {
+        cartItems: JSON.stringify(cart),
+        restaurantId: restaurantId,
+      },
     });
   };
 
@@ -62,6 +82,16 @@ export default function MenuScreen() {
 
   if (loading) {
     return <ActivityIndicator style={{ flex: 1 }} size="large" color="#15803d" />;
+  }
+
+  if (error) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={{ color: '#dc2626', fontSize: 16 }}>
+          Could not load menu. Please try again.
+        </Text>
+      </View>
+    );
   }
 
   return (
@@ -74,6 +104,7 @@ export default function MenuScreen() {
         <Text style={styles.title}>{restaurantName}</Text>
       </View>
 
+      {/* Menu items */}
       <FlatList
         data={menuItems}
         keyExtractor={(item) => item.id.toString()}
@@ -103,11 +134,9 @@ export default function MenuScreen() {
         )}
       />
 
+      {/* Cart button */}
       {cartCount > 0 && (
-        <TouchableOpacity
-          style={styles.cartButton}
-          onPress={() => router.push({ pathname: '/cart', params: { cartItems: JSON.stringify(cart), restaurantId: restaurantId } })}
-        >
+        <TouchableOpacity style={styles.cartButton} onPress={handleViewCart}>
           <Text style={styles.cartButtonText}>🛒 Se kurv ({cartCount})</Text>
         </TouchableOpacity>
       )}

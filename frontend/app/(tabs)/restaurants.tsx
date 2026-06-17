@@ -12,6 +12,10 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 
+// Constants
+const API_BASE_URL = 'https://unclasp-deceiving-skimming.ngrok-free.dev';
+const API_HEADERS = { 'ngrok-skip-browser-warning': 'true' };
+
 type Restaurant = {
   id: number;
   name: string;
@@ -25,30 +29,51 @@ type Restaurant = {
 export default function RestaurantList() {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    fetch('https://unclasp-deceiving-skimming.ngrok-free.dev/api/restaurants', {
-      headers: { 'ngrok-skip-browser-warning': 'true' }
-    })
-      .then(res => res.json())
-      .then(data => {
-        setRestaurants(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error(err);
-        setLoading(false);
-      });
+    fetchRestaurants();
   }, []);
 
-  const filtered = restaurants.filter(r =>
+  const fetchRestaurants = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/restaurants`, {
+        headers: API_HEADERS,
+      });
+      const data = await response.json();
+      setRestaurants(data);
+    } catch (err) {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredRestaurants = restaurants.filter(r =>
     r.name.toLowerCase().includes(search.toLowerCase()) ||
     r.category.toLowerCase().includes(search.toLowerCase())
   );
 
+  const handleRestaurantPress = (restaurant: Restaurant) => {
+    router.push({
+      pathname: '/menu',
+      params: { restaurantId: restaurant.id, restaurantName: restaurant.name },
+    });
+  };
+
   if (loading) {
     return <ActivityIndicator style={{ flex: 1 }} size="large" color="#15803d" />;
+  }
+
+  if (error) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={{ color: '#dc2626', fontSize: 16 }}>
+          Could not load restaurants. Please try again.
+        </Text>
+      </View>
+    );
   }
 
   return (
@@ -59,7 +84,7 @@ export default function RestaurantList() {
         <Text style={styles.title}>Hvad har du lyst til?</Text>
       </View>
 
-      {/* Søgefelt */}
+      {/* Search bar */}
       <View style={styles.searchContainer}>
         <Text style={styles.searchIcon}>🔍</Text>
         <TextInput
@@ -71,15 +96,16 @@ export default function RestaurantList() {
         />
       </View>
 
+      {/* Restaurant list */}
       <FlatList
-        data={filtered}
+        data={filteredRestaurants}
         keyExtractor={(item) => item.id.toString()}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 20 }}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.card}
-            onPress={() => router.push({ pathname: '/menu', params: { restaurantId: item.id, restaurantName: item.name } })}
+            onPress={() => handleRestaurantPress(item)}
             activeOpacity={0.85}
           >
             <Image source={{ uri: item.imageUrl }} style={styles.image} />
@@ -109,7 +135,7 @@ export default function RestaurantList() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F0FDF4' },
-  header: { paddingHorizontal: 20, paddingTop: 16, paddingBottom: 8, backgroundColor: '#15803d', borderBottomLeftRadius: 24, borderBottomRightRadius: 24, paddingBottom: 24 },
+  header: { paddingHorizontal: 20, paddingTop: 16, paddingBottom: 24, backgroundColor: '#15803d', borderBottomLeftRadius: 24, borderBottomRightRadius: 24 },
   greeting: { fontSize: 14, color: '#bbf7d0', marginBottom: 4 },
   title: { fontSize: 28, fontWeight: 'bold', color: '#ffffff' },
   searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 12, marginHorizontal: 20, marginVertical: 16, paddingHorizontal: 16, paddingVertical: 12, borderWidth: 1, borderColor: '#86efac', shadowColor: '#15803d', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 2 },

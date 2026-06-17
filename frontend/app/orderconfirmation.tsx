@@ -9,12 +9,20 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 
+// Constants
+const RESTAURANTS_ROUTE = '/(tabs)/restaurants' as const;
+const DELIVERY_TIME = '30-45 min';
+
 export default function OrderConfirmationScreen() {
-  const { total, restaurantName } = useLocalSearchParams();
+  const { total } = useLocalSearchParams();
   const scaleAnim = useRef(new Animated.Value(0)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    playEntranceAnimation();
+  }, []);
+
+  const playEntranceAnimation = () => {
     Animated.parallel([
       Animated.spring(scaleAnim, {
         toValue: 1,
@@ -28,22 +36,43 @@ export default function OrderConfirmationScreen() {
         useNativeDriver: true,
       }),
     ]).start();
-  }, []);
+  };
+
+  const handleBackToHome = () => {
+    router.replace(RESTAURANTS_ROUTE);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Animated.View style={[styles.content, { opacity: opacityAnim, transform: [{ scale: scaleAnim }] }]}>
+      <Animated.View
+        style={[
+          styles.content,
+          { opacity: opacityAnim, transform: [{ scale: scaleAnim }] },
+        ]}
+      >
+        {/* Success icon */}
         <Text style={styles.emoji}>🎉</Text>
+
+        {/* Title */}
         <Text style={styles.title}>Bestilling modtaget!</Text>
         <Text style={styles.subtitle}>Din ordre er på vej.</Text>
+
+        {/* Total */}
         <View style={styles.card}>
           <Text style={styles.cardLabel}>Total betalt</Text>
           <Text style={styles.cardPrice}>{total} kr</Text>
         </View>
-        <Text style={styles.info}>Estimeret leveringstid: 30-45 min 🚴</Text>
-        <TouchableOpacity style={styles.button} onPress={() => router.replace('/(tabs)')}>
+
+        {/* Delivery time */}
+        <Text style={styles.info}>
+          Estimeret leveringstid: {DELIVERY_TIME} 🚴
+        </Text>
+
+        {/* Back to home */}
+        <TouchableOpacity style={styles.button} onPress={handleBackToHome}>
           <Text style={styles.buttonText}>Tilbage til forsiden</Text>
         </TouchableOpacity>
+
       </Animated.View>
     </SafeAreaView>
   );
